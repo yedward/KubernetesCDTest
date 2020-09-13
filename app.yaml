@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kubernetscd
+  namespace: default
+  labels:
+    app: kubernetscd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetscd
+  template:
+    metadata:
+      labels:
+        app: kubernetscd
+    spec:
+      containers:
+        - name: kubernetscd
+          image: 'nginx:latest'
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: kubernetscd
+  name: kubernetscd
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: kubernetscd
+  type: NodePort
